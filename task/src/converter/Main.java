@@ -10,14 +10,14 @@ public class Main {
         int decimal = scanner.nextInt();
         System.out.println("Enter target base: ");
         int base = scanner.nextInt();
-        System.out.println("Conversion result: " + Integer.toString(decimal, base));
+        System.out.println("Conversion result: " + convertDecimalToBase(decimal, base));
     }
 
     public static String convertDecimalToBase(int decimal, int base) {
         StringBuilder sb = new StringBuilder();
         while (decimal > 0) {
             int reminder = decimal % base;
-            if (base == 16 && reminder > 10) {
+            if (base == 16 && reminder > 9) {
                 sb.append((char) ('a' + reminder - 10));
             } else {
                 sb.append(reminder);
