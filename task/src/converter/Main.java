@@ -16,7 +16,15 @@ public class Main {
     public static String convertDecimalToBase(int decimal, int base) {
         StringBuilder sb = new StringBuilder();
         while (decimal > 0) {
-            sb.append(decimal % base);
+            if (base != 16) {
+                sb.append(decimal % base);
+            } else {
+                if (decimal % base > 10) {
+                    sb.append((char) ('a' + (decimal % base) - 10));
+                } else {
+                    sb.append(decimal % base);
+                }
+            }
             decimal /= base;
         }
         return sb.reverse().toString();
