@@ -53,6 +53,16 @@ public class Main {
     }
 
     public static int convertBaseToDecimal(String source, int base) {
-        return Integer.parseInt(source, base);
+        //return Integer.parseInt(source, base);
+        String reversedSource = new StringBuilder(source).reverse().toString().toUpperCase();
+        int decimal = 0;
+        String digits = "0123456789ABCDEF";
+        for (int i = 0; i < reversedSource.length(); i++) {
+            char c = reversedSource.charAt(i);
+            int d = digits.indexOf(c);
+
+            decimal += (int) Math.pow(base, i) * d;
+        }
+        return decimal;
     }
 }
