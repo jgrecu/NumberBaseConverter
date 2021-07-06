@@ -19,8 +19,6 @@ public class Main {
             } else if (choices.length == 1 && choices[0].equals("/exit")) {
                 scanner.close();
                 break;
-            } else {
-                continue;
             }
         }
     }
@@ -36,39 +34,41 @@ public class Main {
             if ("/back".equals(choice)) {
                 break;
             }
-            if (src == 10) {
-                BigInteger decimal = new BigInteger(choice);
-                System.out.println("Conversion result: " + convertDecimalToBase(decimal, dst));
-                System.out.println();
-            } else if (dst == 10) {
-                System.out.println("Conversion result: " + convertBaseToDecimal(choice, src));
-            } else {
-                System.out.println("Conversion result: " + convertDecimalToBase(convertBaseToDecimal(choice, src), dst));
-            }
+            // KISS!
+            System.out.println("Conversion result: " + new BigInteger(choice, src).toString(dst));
+//            if (src == 10) {
+//                BigInteger decimal = new BigInteger(choice);
+//                System.out.println("Conversion result: " + convertDecimalToBase(decimal, dst));
+//                System.out.println();
+//            } else if (dst == 10) {
+//                System.out.println("Conversion result: " + convertBaseToDecimal(choice, src));
+//            } else {
+//                System.out.println("Conversion result: " + convertDecimalToBase(convertBaseToDecimal(choice, src), dst));
+//            }
         }
     }
 
-    public static String convertDecimalToBase(BigInteger decimal, int base) {
-        StringBuilder sb = new StringBuilder();
-        String digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        while (!BigInteger.ZERO.equals(decimal)) {
-            int reminder = Integer.parseInt(decimal.mod(BigInteger.valueOf(base)).toString());
-            char c = digits.charAt(reminder);
-            sb.append((c + "").toLowerCase());
-            decimal = decimal.divide(BigInteger.valueOf(base));
-        }
-        return sb.reverse().toString();
-    }
+//    public static String convertDecimalToBase(BigInteger decimal, int base) {
+//        StringBuilder sb = new StringBuilder();
+//        String digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+//        while (!BigInteger.ZERO.equals(decimal)) {
+//            int reminder = Integer.parseInt(decimal.mod(BigInteger.valueOf(base)).toString());
+//            char c = digits.charAt(reminder);
+//            sb.append((c + "").toLowerCase());
+//            decimal = decimal.divide(BigInteger.valueOf(base));
+//        }
+//        return sb.reverse().toString();
+//    }
 
-    public static BigInteger convertBaseToDecimal(String source, int base) {
-        String reversedSource = new StringBuilder(source).reverse().toString().toUpperCase();
-        BigInteger decimal = BigInteger.ZERO;
-        String digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        for (int i = 0; i < reversedSource.length(); i++) {
-            char c = reversedSource.charAt(i);
-            int d = digits.indexOf(c);
-            decimal = decimal.add(BigInteger.valueOf((long) Math.pow(base, i) * d));
-        }
-        return decimal;
-    }
+//    public static BigInteger convertBaseToDecimal(String source, int base) {
+//        String reversedSource = new StringBuilder(source).reverse().toString().toUpperCase();
+//        BigInteger decimal = BigInteger.ZERO;
+//        String digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+//        for (int i = 0; i < reversedSource.length(); i++) {
+//            char c = reversedSource.charAt(i);
+//            int d = digits.indexOf(c);
+//            decimal = decimal.add(BigInteger.valueOf((long) Math.pow(base, i) * d));
+//        }
+//        return decimal;
+//    }
 }
