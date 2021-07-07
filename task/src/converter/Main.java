@@ -1,6 +1,8 @@
 package converter;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.Scanner;
 
 public class Main {
@@ -34,41 +36,79 @@ public class Main {
             if ("/back".equals(choice)) {
                 break;
             }
-            // KISS!
-            System.out.println("Conversion result: " + new BigInteger(choice, src).toString(dst));
-//            if (src == 10) {
-//                BigInteger decimal = new BigInteger(choice);
-//                System.out.println("Conversion result: " + convertDecimalToBase(decimal, dst));
-//                System.out.println();
-//            } else if (dst == 10) {
-//                System.out.println("Conversion result: " + convertBaseToDecimal(choice, src));
-//            } else {
-//                System.out.println("Conversion result: " + convertDecimalToBase(convertBaseToDecimal(choice, src), dst));
-//            }
+
+            if (src == 10) {
+                BigDecimal decimal = new BigDecimal(choice);
+                System.out.println("Conversion result: " + convertDecimalToBase(decimal, dst));
+                System.out.println();
+            } else if (dst == 10) {
+                System.out.println("Conversion result: " + convertBaseToDecimal(choice, src));
+            } else {
+                 System.out.println("Conversion result: " + convertDecimalToBase(convertBaseToDecimal(choice, src), dst));
+            }
         }
     }
 
-//    public static String convertDecimalToBase(BigInteger decimal, int base) {
-//        StringBuilder sb = new StringBuilder();
-//        String digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-//        while (!BigInteger.ZERO.equals(decimal)) {
-//            int reminder = Integer.parseInt(decimal.mod(BigInteger.valueOf(base)).toString());
-//            char c = digits.charAt(reminder);
-//            sb.append((c + "").toLowerCase());
-//            decimal = decimal.divide(BigInteger.valueOf(base));
-//        }
-//        return sb.reverse().toString();
-//    }
+    public static String convertDecimalToBase(BigDecimal decimal, int base) {
+        StringBuilder sb = new StringBuilder();
+        String digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-//    public static BigInteger convertBaseToDecimal(String source, int base) {
-//        String reversedSource = new StringBuilder(source).reverse().toString().toUpperCase();
-//        BigInteger decimal = BigInteger.ZERO;
-//        String digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-//        for (int i = 0; i < reversedSource.length(); i++) {
-//            char c = reversedSource.charAt(i);
-//            int d = digits.indexOf(c);
-//            decimal = decimal.add(BigInteger.valueOf((long) Math.pow(base, i) * d));
-//        }
-//        return decimal;
-//    }
+        BigInteger bigIntegerPart = decimal.abs().toBigInteger();
+        double fractionalPart = decimal.subtract(new BigDecimal(bigIntegerPart)).doubleValue();
+
+        String[] strings = decimal.toString().split("\\.");
+
+        if (BigInteger.ZERO.equals(bigIntegerPart)) {
+            sb.append("0");
+        }
+
+        while (!BigInteger.ZERO.equals(bigIntegerPart)) {
+            int reminder = Integer.parseInt(bigIntegerPart.mod(BigInteger.valueOf(base)).toString());
+            char c = digits.charAt(reminder);
+            sb.append((c + "").toLowerCase());
+            bigIntegerPart = bigIntegerPart.divide(BigInteger.valueOf(base));
+        }
+
+        if (strings.length == 1) {
+            sb = sb.reverse();
+        } else if (strings.length > 1) {
+            sb = sb.reverse().append(".");
+            for (int i = 0; i < 5; i++) {
+                int reminder = (int) (fractionalPart * base);
+                char c = digits.charAt(reminder);
+                sb.append((c + "").toLowerCase());
+                fractionalPart = fractionalPart * base - reminder;
+            }
+        }
+        return sb.toString();
+    }
+
+    public static BigDecimal convertBaseToDecimal(String source, int base) {
+        String[] strings = source.split("\\.");
+        String reversedSourceInt = new StringBuilder(strings[0]).reverse().toString().toUpperCase();
+
+        BigInteger decimal = BigInteger.ZERO;
+        String digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        
+        for (int i = 0; i < reversedSourceInt.length(); i++) {
+            char c = reversedSourceInt.charAt(i);
+            int d = digits.indexOf(c);
+            decimal = decimal.add(BigInteger.valueOf((long) Math.pow(base, i) * d));
+        }
+
+        BigDecimal total = new BigDecimal(decimal);
+
+        if (strings.length > 1) {
+            String sourceFractional = strings[1].toUpperCase();
+            BigDecimal bigDecimal = BigDecimal.ZERO;
+            for (int i = 0; i < sourceFractional.length(); i++) {
+                char c = sourceFractional.charAt(i);
+                int d = digits.indexOf(c);
+                bigDecimal = bigDecimal.add(BigDecimal.valueOf(Math.pow(base, -(i+1)) * d));
+            }
+            bigDecimal = bigDecimal.setScale(5, RoundingMode.HALF_UP);
+            total = bigDecimal.add(total);
+        }
+        return total;
+    }
 }
