@@ -18,7 +18,7 @@ public class Main {
             if (choices.length > 1) {
                 final Pattern integerPattern = Pattern.compile("\\A\\d+\\z");
                 if (!integerPattern.matcher(choices[0]).matches() || !integerPattern.matcher(choices[1]).matches()) {
-                    System.out.println("Please use only digits.");
+                    System.out.println("Please use only digits for bases.");
                     continue;
                 }
                 int srcBase = Integer.parseInt(choices[0]);
