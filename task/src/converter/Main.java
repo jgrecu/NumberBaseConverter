@@ -4,9 +4,10 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 public class Main {
-    public static Scanner scanner = new Scanner(System.in);
+    private static final Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
 
@@ -15,6 +16,11 @@ public class Main {
             String choice = scanner.nextLine();
             String[] choices = choice.split(" ");
             if (choices.length > 1) {
+                final Pattern integerPattern = Pattern.compile("\\A\\d+\\z");
+                if (!integerPattern.matcher(choices[0]).matches() || !integerPattern.matcher(choices[1]).matches()) {
+                    System.out.println("Please use only digits.");
+                    continue;
+                }
                 int srcBase = Integer.parseInt(choices[0]);
                 int dstBase = Integer.parseInt(choices[1]);
                 runConversion(srcBase, dstBase);
@@ -37,15 +43,9 @@ public class Main {
                 break;
             }
 
-            if (src == 10) {
-                BigDecimal decimal = new BigDecimal(choice);
-                System.out.println("Conversion result: " + convertDecimalToBase(decimal, dst));
-                System.out.println();
-            } else if (dst == 10) {
-                System.out.println("Conversion result: " + convertBaseToDecimal(choice, src));
-            } else {
-                 System.out.println("Conversion result: " + convertDecimalToBase(convertBaseToDecimal(choice, src), dst));
-            }
+            final BigDecimal inputInDecimal = convertBaseToDecimal(choice, src);
+            final String outputInTargetBase = convertDecimalToBase(inputInDecimal, dst);
+            System.out.println("Conversion result: " + outputInTargetBase);
         }
     }
 
@@ -65,7 +65,7 @@ public class Main {
         while (!BigInteger.ZERO.equals(bigIntegerPart)) {
             int reminder = Integer.parseInt(bigIntegerPart.mod(BigInteger.valueOf(base)).toString());
             char c = digits.charAt(reminder);
-            sb.append((c + "").toLowerCase());
+            sb.append(Character.toString(c).toLowerCase());
             bigIntegerPart = bigIntegerPart.divide(BigInteger.valueOf(base));
         }
 
@@ -76,7 +76,7 @@ public class Main {
             for (int i = 0; i < 5; i++) {
                 int reminder = (int) (fractionalPart * base);
                 char c = digits.charAt(reminder);
-                sb.append((c + "").toLowerCase());
+                sb.append(Character.toString(c).toLowerCase());
                 fractionalPart = fractionalPart * base - reminder;
             }
         }
