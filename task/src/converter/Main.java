@@ -63,8 +63,8 @@ public class Main {
         }
 
         while (!BigInteger.ZERO.equals(bigIntegerPart)) {
-            int reminder = Integer.parseInt(bigIntegerPart.mod(BigInteger.valueOf(base)).toString());
-            char c = digits.charAt(reminder);
+            int remainder = Integer.parseInt(bigIntegerPart.mod(BigInteger.valueOf(base)).toString());
+            char c = digits.charAt(remainder);
             sb.append(Character.toString(c).toLowerCase());
             bigIntegerPart = bigIntegerPart.divide(BigInteger.valueOf(base));
         }
@@ -74,10 +74,10 @@ public class Main {
         } else if (strings.length > 1) {
             sb = sb.reverse().append(".");
             for (int i = 0; i < 5; i++) {
-                int reminder = (int) (fractionalPart * base);
-                char c = digits.charAt(reminder);
+                int remainder = (int) (fractionalPart * base);
+                char c = digits.charAt(remainder);
                 sb.append(Character.toString(c).toLowerCase());
-                fractionalPart = fractionalPart * base - reminder;
+                fractionalPart = fractionalPart * base - remainder;
             }
         }
         return sb.toString();
