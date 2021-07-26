@@ -70,9 +70,9 @@ public class Main {
         }
 
         if (strings.length == 1) {
-            sb = sb.reverse();
+            sb.reverse();
         } else if (strings.length > 1) {
-            sb = sb.reverse().append(".");
+            sb.reverse().append(".");
             for (int i = 0; i < 5; i++) {
                 int remainder = (int) (fractionalPart * base);
                 char c = digits.charAt(remainder);
