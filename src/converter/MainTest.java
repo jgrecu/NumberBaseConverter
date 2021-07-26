@@ -12,10 +12,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class MainTest {
 
     @org.junit.jupiter.api.Test
-    @Disabled
     void convertDecimalToBase() {
         assertEquals("10", Main.convertDecimalToBase(new BigDecimal(2), 2));
-        assertEquals("1e", Main.convertDecimalToBase(new BigDecimal(64), 16));
+        assertEquals("40", Main.convertDecimalToBase(new BigDecimal(64), 16));
     }
 
     @org.junit.jupiter.api.Test
